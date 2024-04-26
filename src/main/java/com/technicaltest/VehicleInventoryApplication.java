@@ -44,8 +44,9 @@ public class VehicleInventoryApplication {
 					.username("wil")
 					.password(passwordEncoder.encode("1234"))
 					.build();
-
-			userRespository.save(userEntity);
+			try {
+				userRespository.save(userEntity);
+			} catch (Exception ignored){}
 		};
 	}
 

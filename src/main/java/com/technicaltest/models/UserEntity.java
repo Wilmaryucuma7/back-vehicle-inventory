@@ -21,6 +21,7 @@ public class UserEntity {
     @Email
     @NotBlank
     @Size(max = 80)
+    @Column(unique = true, length = 80, nullable = false, name = "email")
     private String email;
 
     @NotBlank
