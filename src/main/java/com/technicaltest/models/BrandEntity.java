@@ -5,10 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -24,6 +26,10 @@ public class BrandEntity {
 
     @Column(unique = true, name = "brand_name", nullable = false, length = 30)
     private String name;
+
+    @CreationTimestamp()
+    @Column(name = "brand_created_date", nullable = false, updatable = false)
+    private LocalDateTime brandCreatedDate;
 
     @OneToMany(mappedBy = "brandEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JsonIgnore

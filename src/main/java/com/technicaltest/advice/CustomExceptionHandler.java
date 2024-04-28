@@ -3,7 +3,6 @@ package com.technicaltest.advice;
 import com.technicaltest.controllers.request.ResponseDTO;
 import com.technicaltest.exceptions.EntityAlreadyExistsException;
 import com.technicaltest.exceptions.GlobalException;
-import io.jsonwebtoken.ExpiredJwtException;
 import org.hibernate.TransactionException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -102,14 +101,4 @@ public class CustomExceptionHandler {
                     .response(ex.getMessage())
                     .build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-
-     @ExceptionHandler(ExpiredJwtException.class)
-        public ResponseEntity<ResponseDTO> handleExpiredJwtException(ExpiredJwtException ex) {
-            return new ResponseEntity<>(ResponseDTO.builder()
-                    .error(true)
-                    .response("Expired JWT token")
-                    .build(), HttpStatus.UNAUTHORIZED);
-        }
-
 }
