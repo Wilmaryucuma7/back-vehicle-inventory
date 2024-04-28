@@ -22,9 +22,7 @@ public class BrandEntity {
     @Column(name = "brand_id", nullable = false, length = 60)
     private String id;
 
-    @NotBlank
-    @Size(max = 30)
-    @Column(name = "brand_name", nullable = false, length = 30)
+    @Column(unique = true, name = "brand_name", nullable = false, length = 30)
     private String name;
 
     @OneToMany(mappedBy = "brandEntity", cascade = CascadeType.REMOVE, orphanRemoval = true)
