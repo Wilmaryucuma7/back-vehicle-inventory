@@ -43,6 +43,10 @@ public class BrandService {
         }
     }
 
+    public BrandEntity getBrandById(String id) {
+        return brandRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("La marca no existe"));
+    }
+
     public ResponseDTO addBrand(BrandDTO brandDTO) {
 
         Optional<BrandEntity> existingBrand = brandRepository.findByName(brandDTO.getName());

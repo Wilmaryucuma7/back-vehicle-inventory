@@ -4,10 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -27,7 +29,7 @@ public class VehicleEntity {
 
     @NotBlank
     @Size(max = 10)
-    @Column(name = "vehicle_license_plate", nullable = false, length = 10)
+    @Column(name = "vehicle_license_plate", nullable = false, unique = true, length = 10)
     private String licensePlate;
 
     @NotBlank
@@ -39,6 +41,10 @@ public class VehicleEntity {
     @Size(max = 4)
     @Column(name = "vehicle_year", nullable = false, length = 4)
     private String year;
+
+    @CreationTimestamp()
+    @Column(name = "vehicle_created_date", nullable = false, updatable = false)
+    private LocalDateTime vehicleCreatedDate;
 
     @ManyToOne
     @JoinColumn(name = "brand_id", nullable = false)
