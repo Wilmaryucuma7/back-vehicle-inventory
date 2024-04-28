@@ -1,7 +1,6 @@
 package com.technicaltest.controllers;
 
-import com.technicaltest.controllers.UserController;
-import com.technicaltest.controllers.request.CreateUserDTO;
+import com.technicaltest.controllers.request.UserDTO;
 import com.technicaltest.models.UserEntity;
 import com.technicaltest.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,21 +33,21 @@ public class UserControllerTest {
 
     @Test
     public void createUser_HappyPath() {
-        CreateUserDTO createUserDTO = new CreateUserDTO();
-        createUserDTO.setUsername("testUser");
-        createUserDTO.setPassword("testPassword");
-        createUserDTO.setEmail("testEmail");
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUsername("testUser");
+        userDTO.setPassword("testPassword");
+        userDTO.setEmail("testEmail");
 
         UserEntity userEntity = UserEntity.builder()
-                .username(createUserDTO.getUsername())
-                .password(createUserDTO.getPassword())
-                .email(createUserDTO.getEmail())
+                .username(userDTO.getUsername())
+                .password(userDTO.getPassword())
+                .email(userDTO.getEmail())
                 .build();
 
         when(passwordEncoder.encode(any(String.class))).thenReturn("testPassword");
         when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
 
-        ResponseEntity<UserEntity> response = userController.createUser(createUserDTO);
+        ResponseEntity<UserEntity> response = userController.createUser(userDTO);
 
         assertEquals(200, response.getStatusCodeValue());
         assertEquals(userEntity, response.getBody());
@@ -63,9 +62,9 @@ public class UserControllerTest {
 
     @Test
     public void createUser_EmptyUserDTO() {
-        CreateUserDTO createUserDTO = new CreateUserDTO();
+        UserDTO userDTO = new UserDTO();
 
-        ResponseEntity<UserEntity> response = userController.createUser(createUserDTO);
+        ResponseEntity<UserEntity> response = userController.createUser(userDTO);
 
         assertEquals(400, response.getStatusCodeValue());
     }
