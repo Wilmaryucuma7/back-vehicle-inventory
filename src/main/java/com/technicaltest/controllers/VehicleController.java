@@ -31,6 +31,11 @@ public class VehicleController {
         return new ResponseEntity<>(this.vehicleService.searchVehicles(search,currentPage,10), HttpStatus.OK);
     }
 
+    @GetMapping("/get-vehicle/{id}")
+    public ResponseEntity<ResponseDTO> getVehicle(@PathVariable String id) {
+        return new ResponseEntity<>(this.vehicleService.getVehicleById(id), HttpStatus.OK);
+    }
+
     @PostMapping("/add-vehicle")
     public ResponseEntity<ResponseDTO> addVehicle(@Valid @RequestBody VehicleDTO vehicleDTO) {
         return new ResponseEntity<>(this.vehicleService.addVehicle(vehicleDTO), HttpStatus.CREATED);

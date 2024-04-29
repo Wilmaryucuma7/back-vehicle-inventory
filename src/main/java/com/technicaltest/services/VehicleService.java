@@ -82,8 +82,11 @@ public class VehicleService {
         }
     }
 
-    public VehicleEntity getVehicleById(String id) {
-        return vehicleRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("El vehiculo no existe"));
+    public ResponseDTO getVehicleById(String id) {
+        return ResponseDTO.builder()
+                .response(vehicleRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("El vehiculo no existe")))
+                .error(false)
+                .build();
     }
 
     public ResponseDTO addVehicle(VehicleDTO vehicleDTO) {
