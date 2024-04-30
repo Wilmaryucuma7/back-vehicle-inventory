@@ -87,6 +87,7 @@ public class VehicleService {
      * @return a Page of VehicleEntity
      */
     private Page<VehicleEntity> orderAndPageVehicles(int page, int size, String sortField, String sortDirection) {
+        System.out.println(page);
         PageRequest pageRequest = createPageRequest(page, size, sortField, sortDirection);
         return vehicleRepository.findAll(pageRequest);
     }
@@ -115,6 +116,8 @@ public class VehicleService {
      * @return a ResponseDTO containing the search results
      */
     public ResponseDTO searchVehicles(String search, int page, int size) {
+        System.out.println(page);
+
 
         // Create a Pageable object with the provided page number and size
         Pageable pageable = PageRequest.of(page, size);

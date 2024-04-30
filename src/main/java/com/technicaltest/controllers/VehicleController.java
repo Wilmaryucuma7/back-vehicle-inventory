@@ -20,6 +20,9 @@ public class VehicleController {
 
     @GetMapping("/get-vehicles/{sortField}/{sortDirection}/{currentPage}")
     public ResponseEntity<ResponseDTO> getVehicles(@PathVariable String sortField, @PathVariable String sortDirection, @PathVariable int currentPage) {
+        if(currentPage < 0){
+            currentPage = 0;
+        }
         if(sortField.equals("brand"))
             sortField = "brandEntity.name";
         return new ResponseEntity<>(this.vehicleService.getVehicles(currentPage, 10, sortField, sortDirection), HttpStatus.OK);
@@ -27,6 +30,9 @@ public class VehicleController {
 
     @GetMapping("/search-vehicles/{search}/{currentPage}")
     public ResponseEntity<ResponseDTO> searchVehicles(@PathVariable String search, @PathVariable int currentPage) {
+        if(currentPage < 0){
+            currentPage = 0;
+        }
         return new ResponseEntity<>(this.vehicleService.searchVehicles(search,currentPage,10), HttpStatus.OK);
     }
 
