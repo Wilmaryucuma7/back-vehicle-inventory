@@ -1,0 +1,1 @@
+INSERT ignore INTO brands (brand_id, brand_name, brand_created_date) VALUES (1, 'Toyota', now()), (2, 'Ferrari', now()), (3, 'Pagani', now()), (4, 'Lamborgini', now()), (5, 'Tesla', now()), (6, 'Twingo', now());
