@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Data
@@ -22,23 +20,15 @@ public class VehicleEntity {
     @Column(name = "vehicle_id", nullable = false, length = 60)
     private String id;
 
-    @NotBlank
-    @Size(max = 30)
     @Column(name = "vehicle_model", nullable = false, length = 30)
     private String model;
 
-    @NotBlank
-    @Size(max = 10)
-    @Column(name = "vehicle_license_plate", nullable = false, unique = true, length = 10)
+    @Column(name = "vehicle_license_plate", nullable = false, unique = true, length = 6)
     private String licensePlate;
 
-    @NotBlank
-    @Size(max = 20)
     @Column(name = "vehicle_color", nullable = false, length = 20)
     private String color;
 
-    @NotBlank
-    @Size(max = 4)
     @Column(name = "vehicle_year", nullable = false, length = 4)
     private String year;
 

@@ -30,6 +30,11 @@ public class BrandController {
         return new ResponseEntity<>(brandService.addBrand(brandDTO), HttpStatus.CREATED);
     }
 
+    @GetMapping("/get-brand/{id}")
+    public ResponseEntity<ResponseDTO> getBrandById(@PathVariable String id) {
+        return new ResponseEntity<>(brandService.getBrandById(id), HttpStatus.OK);
+    }
+
     @PutMapping("/update-brand/{id}")
     public ResponseEntity<ResponseDTO> updateBrand(@PathVariable String id, @Valid @RequestBody BrandDTO brandDTO) {
 
