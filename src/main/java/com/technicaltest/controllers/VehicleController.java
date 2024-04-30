@@ -18,7 +18,6 @@ public class VehicleController {
         this.vehicleService = vehicleService;
     }
 
-
     @GetMapping("/get-vehicles/{sortField}/{sortDirection}/{currentPage}")
     public ResponseEntity<ResponseDTO> getVehicles(@PathVariable String sortField, @PathVariable String sortDirection, @PathVariable int currentPage) {
         if(sortField.equals("brand"))

@@ -20,7 +20,7 @@ public class VehicleDTO {
     private String model;
 
     @NotBlank
-    @Size(max = 6)
+    @Size(max = 6, min = 5)
     @Pattern(regexp = "^[a-zA-Z][a-zA-Z0-9]*$", message = "La placa debe empezar por letra y no debe tener caracteres especiales")
     private String licensePlate;
 
