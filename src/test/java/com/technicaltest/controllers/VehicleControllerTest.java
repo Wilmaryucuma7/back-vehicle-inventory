@@ -46,7 +46,7 @@ class VehicleControllerTest {
         ResponseDTO responseDTO = new ResponseDTO();
         when(vehicleService.searchVehicles(anyString(), anyInt(), anyInt())).thenReturn(responseDTO);
 
-        ResponseEntity<ResponseDTO> response = vehicleController.searchVehicles("searchTerm", '1');
+        ResponseEntity<ResponseDTO> response = vehicleController.searchVehicles("searchTerm", 1);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(responseDTO, response.getBody());
