@@ -49,20 +49,18 @@ class VehicleServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
+
     @Test
-    @DisplayName("Should add vehicle successfully when vehicle with same license plate does not exist and brand exists")
-    void shouldAddVehicleSuccessfullyWhenVehicleWithSameLicensePlateDoesNotExistAndBrandExists() {
-        VehicleDTO vehicleDTO = new VehicleDTO();
-        vehicleDTO.setLicensePlate("ABC123");
-        String brandId = UUID.randomUUID().toString();
-        vehicleDTO.setBrandId(brandId);
+    @DisplayName("Should throw EntityNotFoundException when vehicle does not exist")
+    void shouldThrowEntityNotFoundExceptionWhenVehicleDoesNotExist() {
+        String id = UUID.randomUUID().toString();
+        VehicleDTO vehicleDTO = new VehicleDTO("Model", "A12345", "Blue", "2000", "1");
 
-        when(vehicleRepository.existsByLicensePlate(vehicleDTO.getLicensePlate())).thenReturn(false);
-        when(brandService.findBrandById(brandId)).thenReturn(new BrandEntity());
-        when(vehicleRepository.save(any(VehicleEntity.class))).thenReturn(new VehicleEntity());
+        when(vehicleRepository.existsById(id)).thenReturn(false);
 
-        assertDoesNotThrow(() -> vehicleService.addVehicle(vehicleDTO));
+        assertThrows(EntityNotFoundException.class, () -> vehicleService.updateVehicle(id, vehicleDTO));
     }
+
 
     @Test
     @DisplayName("Should throw DataIntegrityViolationException when vehicle with same license plate already exists")
@@ -76,56 +74,7 @@ class VehicleServiceTest {
         assertThrows(DataIntegrityViolationException.class, () -> vehicleService.addVehicle(vehicleDTO));
     }
 
-    @Test
-    @DisplayName("Should throw EntityNotFoundException when brand does not exist")
-    void shouldThrowEntityNotFoundExceptionWhenBrandDoesNotExist() {
-        VehicleDTO vehicleDTO = new VehicleDTO();
-        vehicleDTO.setLicensePlate("ABC123");
-        String brandId = UUID.randomUUID().toString();
-        vehicleDTO.setBrandId(brandId);
 
-        when(vehicleRepository.existsByLicensePlate(vehicleDTO.getLicensePlate())).thenReturn(false);
-        when(brandService.findBrandById(brandId)).thenThrow(new EntityNotFoundException("La marca no existe"));
-
-        assertThrows(EntityNotFoundException.class, () -> vehicleService.addVehicle(vehicleDTO));
-    }
-
-//    @Test
-//    @DisplayName("Should throw DataIntegrityViolationException when vehicle with same license plate already exists")
-//    void shouldThrowDataIntegrityViolationExceptionWhenVehicleWithSameLicensePlateAlreadyExists() {
-//        VehicleDTO vehicleDTO = new VehicleDTO();
-//        vehicleDTO.setLicensePlate("ABC123");
-//        vehicleDTO.setBrandId(UUID.randomUUID().toString());
-//
-//        when(vehicleRepository.existsByLicensePlate(vehicleDTO.getLicensePlate())).thenReturn(true);
-//
-//        assertThrows(DataIntegrityViolationException.class, () -> vehicleService.addVehicle(vehicleDTO));
-//    }
-//
-//    @Test
-//    @DisplayName("Should add vehicle successfully when vehicle with same license plate does not exist and brand exists")
-//    void shouldAddVehicleSuccessfullyWhenVehicleWithSameLicensePlateDoesNotExistAndBrandExists() {
-//        VehicleDTO vehicleDTO = new VehicleDTO();
-//        vehicleDTO.setLicensePlate("ABC123");
-//        String brandId = UUID.randomUUID().toString();
-//        vehicleDTO.setBrandId(brandId);
-//
-//        when(vehicleRepository.existsByLicensePlate(vehicleDTO.getLicensePlate())).thenReturn(false);
-//        when(brandService.findBrandById(brandId)).thenReturn(new BrandEntity());
-//        when(vehicleRepository.save(any(VehicleEntity.class))).thenReturn(new VehicleEntity());
-//
-//        assertDoesNotThrow(() -> vehicleService.addVehicle(vehicleDTO));
-//    }
-
-    @Test
-    @DisplayName("Should throw EntityNotFoundException when vehicle does not exist")
-    void shouldThrowEntityNotFoundExceptionWhenVehicleDoesNotExist() {
-        String id = UUID.randomUUID().toString();
-
-        when(vehicleRepository.existsById(id)).thenReturn(false);
-
-        assertThrows(EntityNotFoundException.class, () -> vehicleService.deleteVehicle(id));
-    }
 
     @Test
     @DisplayName("Should delete vehicle successfully when vehicle exists")

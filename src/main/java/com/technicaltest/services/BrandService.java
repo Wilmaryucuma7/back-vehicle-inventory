@@ -95,6 +95,7 @@ public class BrandService {
         if (!brandRepository.existsById(id)) {
             throw new EntityNotFoundException(DELETE_BRAND_NOT_FOUND);
         }
+        brandRepository.deleteById(id);
         return ResponseDTO.builder()
                 .response(Constants.SUCCESS)
                 .error(false)

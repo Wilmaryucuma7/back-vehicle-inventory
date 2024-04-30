@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/brand")
+@RequestMapping("/api/v1/brand")
 public class BrandController {
     private final BrandService brandService;
 

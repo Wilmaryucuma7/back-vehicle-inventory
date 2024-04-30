@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/vehicle")
+@RequestMapping("/api/v1/vehicle")
 public class VehicleController {
     private final VehicleService vehicleService;
 
