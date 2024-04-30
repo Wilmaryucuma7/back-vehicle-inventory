@@ -23,11 +23,18 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
      public ResponseEntity<ResponseDTO>  handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getFieldErrors().forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
+        StringBuilder errors = new StringBuilder();
+        ex.getBindingResult().getFieldErrors().forEach(error ->
+                errors.append(error.getField()).append(": ").append(error.getDefaultMessage()).append(", ")
+        );
+
+        // Remove the last comma and space
+        if (errors.length() > 0) {
+            errors.setLength(errors.length() - 2);
+        }
             return new ResponseEntity<>(ResponseDTO.builder()
                     .error(true)
-                    .response(errors)
+                    .response(errors.toString())
                     .build(), HttpStatus.BAD_REQUEST);
      }
 
@@ -35,7 +42,7 @@ public class CustomExceptionHandler {
      public ResponseEntity<ResponseDTO> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
             return new ResponseEntity<>(ResponseDTO.builder()
                     .error(true)
-                    .response("Invalid JSON request")
+                    .response("La solitud no pudo ser procesada")
                     .build(), HttpStatus.BAD_REQUEST);
      }
 
@@ -43,8 +50,8 @@ public class CustomExceptionHandler {
         public ResponseEntity<ResponseDTO> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
             return new ResponseEntity<>(ResponseDTO.builder()
                     .error(true)
-                    .response("Data integrity violation exception")
-                    .build(), HttpStatus.BAD_REQUEST);
+                    .response(ex.getMessage())
+                    .build(), HttpStatus.CONFLICT);
         }
 
      @ExceptionHandler(EntityAlreadyExistsException.class)
@@ -52,7 +59,7 @@ public class CustomExceptionHandler {
             return new ResponseEntity<>(ResponseDTO.builder()
                     .error(true)
                     .response(ex.getMessage())
-                    .build(), HttpStatus.BAD_REQUEST);
+                    .build(), HttpStatus.CONFLICT);
         }
 
      @ExceptionHandler(EntityNotFoundException.class)
@@ -60,7 +67,7 @@ public class CustomExceptionHandler {
             return new ResponseEntity<>(ResponseDTO.builder()
                     .error(true)
                     .response(ex.getMessage())
-                    .build(), HttpStatus.INTERNAL_SERVER_ERROR);
+                    .build(), HttpStatus.NOT_FOUND);
         }
 
      @ExceptionHandler(GlobalException.class)
@@ -75,7 +82,7 @@ public class CustomExceptionHandler {
         public ResponseEntity<ResponseDTO> handleIllegalArgumentException(IllegalArgumentException ex) {
             return new ResponseEntity<>(ResponseDTO.builder()
                     .error(true)
-                    .response(ex.getMessage())
+                    .response("Argumento inválido")
                     .build(), HttpStatus.BAD_REQUEST);
         }
 
@@ -83,7 +90,7 @@ public class CustomExceptionHandler {
         public ResponseEntity<ResponseDTO> handleEmptyResultDataAccessException(EmptyResultDataAccessException ex) {
             return new ResponseEntity<>(ResponseDTO.builder()
                     .error(true)
-                    .response(ex.getMessage())
+                    .response("No se encontraron resultados")
                     .build(), HttpStatus.NOT_FOUND);
         }
 
@@ -91,14 +98,22 @@ public class CustomExceptionHandler {
         public ResponseEntity<ResponseDTO> handleDataAccessException(DataAccessException ex) {
             return new ResponseEntity<>(ResponseDTO.builder()
                     .error(true)
-                    .response(ex.getMessage())
+                    .response("Error de acceso a los datos")
                     .build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
      @ExceptionHandler(TransactionException.class)
         public ResponseEntity<ResponseDTO> handleTransactionException(TransactionException ex) {
             return new ResponseEntity<>(ResponseDTO.builder()
                     .error(true)
-                    .response(ex.getMessage())
+                    .response("Lo sentimos, hubo un problema al procesar su solicitud. Por favor, inténtelo de nuevo más tarde.")
                     .build(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ResponseDTO> handleAllExceptions(Exception ex) {
+        return new ResponseEntity<>(ResponseDTO.builder()
+                .error(true)
+                .response("Ha ocurrido un error inesperado. Por favor, inténtelo de nuevo más tarde.")
+                .build(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

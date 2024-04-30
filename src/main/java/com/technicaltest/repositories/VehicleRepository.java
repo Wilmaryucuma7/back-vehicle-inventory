@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface VehicleRepository extends JpaRepository<VehicleEntity, String> {
@@ -17,4 +18,6 @@ public interface VehicleRepository extends JpaRepository<VehicleEntity, String> 
             "v.model LIKE %:search% OR " +
             "v.licensePlate LIKE %:search%")
     Page<VehicleEntity> findByBrandModelOrLicensePlate(@Param("search") String search, Pageable pageable);
+
+    boolean existsByLicensePlate(String licensePlate);
 }

@@ -1,9 +1,9 @@
 package com.technicaltest.services;
 
 import com.technicaltest.controllers.request.BrandDTO;
+import com.technicaltest.controllers.request.BrandResponseDTO;
 import com.technicaltest.controllers.request.ResponseDTO;
 import com.technicaltest.exceptions.EntityAlreadyExistsException;
-import com.technicaltest.exceptions.GlobalException;
 import com.technicaltest.models.BrandEntity;
 import com.technicaltest.repositories.BrandRepository;
 import com.technicaltest.utils.Constants;
@@ -11,18 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class BrandService {
-
-    public static final String GET_BRANDS_ERROR = "Error al obtener las marcas";
-    public static final String ADD_BRAND_ERROR = "Error al agregar la marca";
-    public static final String UPDATE_BRAND_ERROR = "Error al actualizar la marca";
     public static final String UPDATE_BRAND_NOT_FOUND = "Error al actualizar, marca no encontrada";
-    public static final String DELETE_BRAND_ERROR = "Error al eliminar la marca";
-
+    public static final String DELETE_BRAND_NOT_FOUND = "Error al eliminar, marca no encontrada";
 
     private final BrandRepository brandRepository;
 
@@ -33,17 +30,34 @@ public class BrandService {
 
 
     public ResponseDTO getBrands() {
-        try {
+            List<BrandEntity> brandEntities = brandRepository.findAll();
+            List<BrandResponseDTO> brands = brandEntities.stream()
+                    .map(brandEntity -> BrandResponseDTO.builder()
+                            .id(brandEntity.getId())
+                            .name(brandEntity.getName())
+                            .build())
+                    .collect(Collectors.toList());
+
             return ResponseDTO.builder()
-                    .response(brandRepository.findAll())
+                    .response(brands)
                     .error(false)
                     .build();
-        } catch (Exception e) {
-            throw new GlobalException(GET_BRANDS_ERROR);
-        }
     }
 
-    public BrandEntity getBrandById(String id) {
+    public ResponseDTO getBrandById(String id) {
+        BrandEntity brandEntity = brandRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("La marca no existe"));
+        BrandResponseDTO brand = BrandResponseDTO.builder()
+                .id(brandEntity.getId())
+                .name(brandEntity.getName())
+                .build();
+
+        return ResponseDTO.builder()
+                .response(brand)
+                .error(false)
+                .build();
+    }
+
+    public BrandEntity findBrandById(String id) {
         return brandRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("La marca no existe"));
     }
 
@@ -78,15 +92,13 @@ public class BrandService {
     }
 
     public ResponseDTO deleteBrand(String id) {
-
-        try {
-            brandRepository.deleteById(id);
-            return ResponseDTO.builder()
-                    .response(Constants.SUCCESS)
-                    .error(false)
-                    .build();
-        } catch (Exception e) {
-            throw new GlobalException(DELETE_BRAND_ERROR);
+        if (!brandRepository.existsById(id)) {
+            throw new EntityNotFoundException(DELETE_BRAND_NOT_FOUND);
         }
+        return ResponseDTO.builder()
+                .response(Constants.SUCCESS)
+                .error(false)
+                .build();
+
     }
 }
